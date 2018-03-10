@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	<!-- 
+	<bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dataSource">
+		<property name="user"><value>scott</value></property>
+		<property name="password"><value>tiger</value></property>
+		<property name="jdbcUrl"><value>jdbc:oracle:thin:@127.0.0.1:1521:orcl</value></property>
+		<property name="driverClass"><value>oracle.jdbc.driver.OracleDriver</value></property>
+	</bean>
+	 -->
+	<!-- 以上方式配置数据源是没有程序上的问题，但是在站在设计的角度讲，这样的配置耦合性太高
+		试想，如果项目需要更换连接池实现，或者修改数据库用户以及数据库的信息则必须牵一发而动全身。
+		为解决这一问题，采用如下方式即可解耦和。
+	 -->
+	<context:property-placeholder file-encoding="utf8" location="classpath:db.properties" />
+	<bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dataSource">
+		<property name="user"><value>${u}</value></property>
+		<property name="password"><value>${p}</value></property>
+		<property name="driverClass"><value>${d}</value></property>
+		<property name="jdbcUrl"><value>${j}</value></property>
+	</bean>
+</beans>

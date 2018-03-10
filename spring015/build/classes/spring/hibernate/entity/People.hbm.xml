@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="spring.hibernate.entity">
+	<class name="People">
+		<id name="peoid" type="java.lang.String" >
+			<generator class="uuid" />
+		</id>
+		<property name="pname"/>
+		<set name="comList" cascade="all" >
+			<key>
+				<column name="peoid"></column>
+			</key>
+			<one-to-many class="spring.hibernate.entity.Computer" />
+		</set>
+	</class>
+</hibernate-mapping>

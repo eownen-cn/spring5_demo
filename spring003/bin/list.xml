@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	<bean id="car1" class="org.denny.list.bean.Car" 
+		p:brand="奔驰" 
+		p:price="689000" 
+		></bean>
+	<bean id="car2" class="org.denny.list.bean.Car" 
+		p:brand="宝马" 
+		p:price="350000" 
+		></bean>
+	<bean id="car3" class="org.denny.list.bean.Car" 
+		p:brand="凯迪拉克" 
+		p:price="966000" 
+		></bean>
+	<bean id="car4" class="org.denny.list.bean.Car" 
+		p:brand="劳斯莱斯" 
+		p:price="3666000" 
+		></bean>
+	<bean id="address" class="org.denny.list.bean.Address"
+		p:city="成都"
+		></bean>
+		
+	<util:list id="carList">
+		<ref bean="car1" />
+		<ref bean="car2" />
+		<ref bean="car3" />
+		<ref bean="car4" />
+	</util:list>
+	
+	<bean id="people" class="org.denny.list.bean.People"
+		p:id="0000001"
+		p:name="丹尼"
+		autowire="byName"
+		></bean>
+</beans>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- 配置数据源 -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	
+	<!-- 配置Spring组建的自动扫描 -->
+	<context:component-scan base-package="spring.hibernate" />
+	
+	
+	<bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="jdbc">
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		
+		<property name="initialPoolSize" value="${jdbc.initPoolSize}" />
+		<property name="maxPoolSize" value="${jdbc.maxPoolSize}" />
+	</bean>
+	
+	<!-- 配置Hibernate的SessionFactory实例 -->
+	<bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" id="sessionFactory">
+		<property name="dataSource" ref="jdbc" />
+		<property name="configLocation" value="classpath:hibernate.cfg.xml" />
+		<property name="mappingLocations" value="classpath:spring/hibernate/entity/*.hbm.xml"/>
+	</bean>
+	
+	<!-- 配置Spring的声明式事务 -->
+	
+	<!-- 配置Spring事务管理器 -->
+	<bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" id="transactionManager">
+		<property name="dataSource" ref="jdbc"></property>
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!-- 配置事务通知切面(属性) -->
+	<tx:advice transaction-manager="transactionManager" id="txa">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="add*" read-only="false" />
+			<tx:method name="update*" read-only="false" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 通过AOP指定事务切面的切入点 -->
+	<aop:config>
+		<aop:advisor advice-ref="txa" pointcut="execution(* spring.hibernate.service.*.*(..))"/>
+	</aop:config>
+	
+	<bean class="spring.hibernate.service.PeopleService" id="peopleService"></bean>
+	
+	<!-- struts2的Action是非单例的，在这里必须指定其为原型(prototype) -->
+	<bean class="spring.hibernate.action.PeopleAction" id="peopleAction" scope="prototype">
+		<property name="peopleService" ref="peopleService"></property>
+	</bean>
+	
+</beans>

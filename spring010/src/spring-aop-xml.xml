@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	<bean class="org.denny.spring.aop.impl.xml.CalculatorImpl" id="calculatorImpl"></bean>
+	<bean class="org.denny.spring.aop.impl.xml.LoggingAspect" id="loggingAspect"></bean>
+	<bean class="org.denny.spring.aop.impl.xml.ValidateAspect" id="validateAspect"></bean>
+	
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* org.denny.spring.aop.impl.xml.CalculatorImpl.*(..))" id="pointcut"/>
+		<aop:aspect ref="loggingAspect" order="2">
+			<!-- 
+			<aop:before method="beforeMethod" arg-names="point" pointcut-ref="pointcut"/>
+			<aop:after method="afterMethod" arg-names="point" pointcut-ref="pointcut"/>
+			<aop:after-returning method="afterReturning" returning="result" pointcut-ref="pointcut"/>
+			<aop:after-throwing method="afterThrowing" throwing="e" pointcut-ref="pointcut"/>
+			 -->
+			<aop:around method="aroundMethod" pointcut-ref="pointcut"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="validateAspect" order="1">
+			<aop:before method="validate" arg-names="signature" pointcut-ref="pointcut" />
+		</aop:aspect>
+		
+	</aop:config>
+	
+</beans>
